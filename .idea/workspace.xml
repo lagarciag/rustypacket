@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dc32e5c4-4a4e-42b3-b70d-6c900f46c0fd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/base/fragment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/base/fragment.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/base/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/base/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/base/payload.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/base/payload.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/decode/decodefailure.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/decode/decodefailure.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/decode/decodefragment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/decode/decodefragment.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/decode/decodepayload.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/decode/decodepayload.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/decode/decodeunknown.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/decode/decodeunknown.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/decode/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/decode/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/error/decodererror.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/error/decodererror.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/layertype/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/layertype/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rtpacket/packet/eagerpacket.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rtpacket/packet/eagerpacket.rs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="hs1rxcn9" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2d5iT81IjebagvPyARE1vjhXgiU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Doctest of rtpacket::decode::decodefragment::decode_fragment (line 33).executor": "Run",
+    "Cargo.Doctest of rtpacket::decode::decodeunknown::create_decode_unknown (line 23).executor": "Run",
+    "Cargo.Test checksum::tests.executor": "Run",
+    "Cargo.Test decodefailure::tests.executor": "Run",
+    "Cargo.Test decodefragment::tests.executor": "Run",
+    "Cargo.Test decodeoptions::tests.executor": "Run",
+    "Cargo.Test decodepayload::tests.executor": "Run",
+    "Cargo.Test decodererror::tests.executor": "Run",
+    "Cargo.Test decodeunknown::tests.executor": "Run",
+    "Cargo.Test fragment::tests.executor": "Run",
+    "Cargo.Test layerclass::tests.executor": "Run",
+    "Cargo.Test payload::tests.executor": "Run",
+    "Cargo.Test rtpacket::base::fragment::tests::serialize_to_failure_due_to_empty_data.executor": "Run",
+    "Cargo.Test rtpacket::base::fragment::tests::serialize_to_success.executor": "Run",
+    "Cargo.Test rtpacket::base::fragment::tests::test_fragment_and_payload_serialize_to.executor": "Run",
+    "Cargo.Test rtpacket::base::fragment::tests::test_fragment_creation.executor": "Run",
+    "Cargo.Test rtpacket::base::fragment::tests::test_fragment_creationx.executor": "Run",
+    "Cargo.Test rtpacket::base::fragment::tests::test_payload_and_fragment_creation.executor": "Run",
+    "Cargo.Test rtpacket::base::payload::tests::test_payload_creation.executor": "Run",
+    "Cargo.Test rtpacket::base::payload::tests::test_payload_decode_from_bytes.executor": "Run",
+    "Cargo.Test rtpacket::base::payload::tests::test_serialize_to.executor": "Run",
+    "Cargo.Test rtpacket::decode::decodefailure::tests::test_decode_failure_string.executor": "Run",
+    "Cargo.Test rtpacket::decode::decodefailure::tests::test_dump_invalid_utf8.executor": "Run",
+    "Cargo.Test rtpacket::decode::decodefailure::tests::test_dump_valid_utf8.executor": "Run",
+    "Cargo.Test rtpacket::decode::decodefragment::tests::decode_adds_fragment_layer.executor": "Run",
+    "Cargo.Test rtpacket::decode::decodefragment::tests::decode_handles_empty_data.executor": "Run",
+    "Cargo.Test rtpacket::decode::decodepayload::tests::decode_handles_empty_data.executor": "Run",
+    "Cargo.Test rtpacket::decode::decodeunknown::tests::decode_always_fails.executor": "Run",
+    "Cargo.Test rtpacket::error::decodererror::tests::decode_error_trait_impl.executor": "Run",
+    "Cargo.Test rtpacket::layerclass::tests::test_contains.executor": "Run",
+    "Cargo.Test rtpacket::layerclass::tests::test_layer_class_contains.executor": "Run",
+    "Cargo.Test rtpacket::layerclass::tests::test_layer_class_layer_types.executor": "Run",
+    "Cargo.Test rtpacket::layerclass::tests::test_layer_types.executor": "Run",
+    "Cargo.Test rtpacket::layerclass::tests::test_new_layer_class_with_map.executor": "Run",
+    "Cargo.Test rtpacket::layertype::tests::test_layer_registry_initialization.executor": "Run",
+    "Cargo.Test rtpacket::packet::eagerpacket::tests::eager_packet_initialization.executor": "Run",
+    "Cargo.Test rustypacket.executor": "Run",
+    "Cargo.Test writer::tests.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "code.cleanup.on.save": "true",
+    "full.screen.before.presentation.mode": "false",
+    "git-widget-placeholder": "lagarciag/main",
+    "last_opened_file_path": "/home/galuisal/Documents/work/rust/rustypacket",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "rearrange.code.on.save": "true",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "language.rust.cargo.check",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/rtpacket" />
+      <recent name="$PROJECT_DIR$/src/rtpacket/layerclass" />
+      <recent name="$PROJECT_DIR$/src/rtpacket/writer" />
+      <recent name="$PROJECT_DIR$/src/rtpacket/layerstring" />
+      <recent name="$PROJECT_DIR$/src/packet/error" />
+    </key>
+  </component>
+  <component name="RsExternalLinterProjectSettings">
+    <option name="additionalArguments" value="--fix --all-features" />
+    <option name="channel" value="stable" />
+    <option name="runOnTheFly" value="true" />
+    <option name="tool" value="Clippy" />
+  </component>
+  <component name="RunManager" selected="Cargo.Test decodefragment::tests">
+    <configuration name="Doctest of rtpacket::decode::decodefragment::decode_fragment (line 33)" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package rustypacket --doc &quot;rtpacket::decode::decodefragment::decode_fragment\ (line\ 33)&quot;" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test decodefailure::tests" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package rustypacket --lib rtpacket::decode::decodefailure::tests" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test decodefragment::tests" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package rustypacket --lib rtpacket::decode::decodefragment::tests" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test decodepayload::tests" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package rustypacket --lib rtpacket::decode::decodepayload::tests" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test rtpacket::decode::decodefailure::tests::test_dump_invalid_utf8" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package rustypacket --lib rtpacket::decode::decodefailure::tests::test_dump_invalid_utf8 -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test rustypacket" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="test --workspace" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo.Test decodefragment::tests" />
+        <item itemvalue="Cargo.Test decodepayload::tests" />
+        <item itemvalue="Cargo.Doctest of rtpacket::decode::decodefragment::decode_fragment (line 33)" />
+        <item itemvalue="Cargo.Test decodefailure::tests" />
+        <item itemvalue="Cargo.Test rtpacket::decode::decodefailure::tests::test_dump_invalid_utf8" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
+  <component name="RustfmtProjectSettings">
+    <option name="useRustfmt" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dc32e5c4-4a4e-42b3-b70d-6c900f46c0fd" name="Changes" comment="" />
+      <created>1709304346339</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1709304346339</updated>
+      <workItem from="1709304347475" duration="36642000" />
+      <workItem from="1709661708710" duration="38590000" />
+      <workItem from="1709850040023" duration="24077000" />
+      <workItem from="1710176165217" duration="31954000" />
+      <workItem from="1710283989330" duration="10000" />
+      <workItem from="1710284015259" duration="3549000" />
+      <workItem from="1710340241407" duration="64244000" />
+      <workItem from="1710644598806" duration="259000" />
+      <workItem from="1710644876330" duration="845000" />
+      <workItem from="1710691924949" duration="42000" />
+      <workItem from="1710691987210" duration="39584000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/rtpacket/packet/eagerpacket.rs</url>
+          <line>194</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
