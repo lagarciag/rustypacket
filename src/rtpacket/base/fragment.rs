@@ -4,9 +4,13 @@ use std::ops::Deref;
 use std::rc::Rc;
 
 use crate::rtpacket::base::{ApplicationLayer, Layer, Payloadable};
+use crate::rtpacket::checksum::ChecksumVerificationResult;
 use crate::rtpacket::decode::{DecodeFeedback, decoder_builder, LayerType};
 use crate::rtpacket::decode::decodefragment::fragment_decoder;
-use crate::rtpacket::error::decodererror::DecodeError;
+use crate::rtpacket::error::decodeerror::DecodeError;
+use crate::rtpacket::error::ErrorDecodeable;
+use crate::rtpacket::error::nomethoderror::MethodNotImplementedError;
+use crate::rtpacket::error::PacketError;
 use crate::rtpacket::layerclass::LayerClass;
 use crate::rtpacket::layertype::LayerTypeID;
 use crate::rtpacket::layertype::LayerTypes::{LayerTypeFragment, LayerTypeZero};
@@ -71,6 +75,13 @@ impl Layer for Fragment {
         None
     }
 
+    fn verify_checksum(&self) -> Result<ChecksumVerificationResult, PacketError> {
+        Err(PacketError::from(MethodNotImplementedError::new(
+            "layer does not verify checksum",
+            None,
+        )))
+    }
+
     fn string(&self) -> String {
         match &self.in_data {
             None => "0 byte(s)".to_string(),
@@ -110,7 +121,7 @@ impl SerializableLayer for Fragment {
             Some(data) => {
                 let size = data.deref().len();
                 let bytes = buffer.prepend_bytes(size)?;
-                bytes.copy_from_slice(&data.deref());
+                bytes.copy_from_slice(data.deref());
                 Ok(())
             }
         }
@@ -137,7 +148,7 @@ impl Payloadable for Fragment {
     fn decode_from_bytes(
         &mut self,
         data: Rc<[u8]>,
-        mut _builder: Box<dyn DecodeFeedback>,
+        mut _builder: Rc<dyn DecodeFeedback>,
     ) -> Result<(), DecodeError> {
         self.in_data = Option::from(data.clone());
 

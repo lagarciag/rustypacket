@@ -4,15 +4,18 @@ use std::ops::Deref;
 use std::rc::Rc;
 
 use crate::rtpacket::base::{ApplicationLayer, Layer, Payloadable};
-use crate::rtpacket::decode::{decoder_builder, DecodeFeedback, LayerType};
-use crate::rtpacket::error::decodererror::DecodeError;
+use crate::rtpacket::checksum::ChecksumVerificationResult;
+use crate::rtpacket::decode::{DecodeFeedback, decoder_builder, LayerType};
+use crate::rtpacket::error::{decodeerror, PacketError};
+use crate::rtpacket::error::decodeerror::DecodeError;
+use crate::rtpacket::error::ErrorDecodeable;
 use crate::rtpacket::layerclass::LayerClass;
 use crate::rtpacket::layertype::LayerTypeID;
 use crate::rtpacket::layertype::LayerTypes::{
-    LayerTypeDecodeFailure, LayerTypeFragment, LayerTypePayload, LayerTypeZero,
+    LayerTypeDecodeFailure, LayerTypePayload, LayerTypeZero,
 };
 use crate::rtpacket::writer::{
-    SerializableLayer, SerializeBuffer, SerializeOptions, SerializeableBuffer,
+    SerializableLayer, SerializeableBuffer, SerializeBuffer, SerializeOptions,
 };
 
 #[derive(Clone)]
@@ -25,8 +28,8 @@ impl Payload {
     pub(crate) fn new() -> Self {
         Payload {
             layer_type: LayerType {
-                id: LayerTypeFragment as LayerTypeID,
-                name: "DecodeFragment".to_owned(),
+                id: LayerTypePayload as LayerTypeID,
+                name: "Payload".to_owned(),
                 decoder: decoder_builder(LayerTypePayload),
             },
             in_data: None, // or Vec::with_capacity(capacity) if you want to preallocate space.
@@ -35,8 +38,8 @@ impl Payload {
     pub fn new_from(data: Rc<[u8]>) -> Self {
         Payload {
             layer_type: LayerType {
-                id: LayerTypeFragment as LayerTypeID,
-                name: "DecodeFragment".to_owned(),
+                id: LayerTypePayload as LayerTypeID,
+                name: "Payload".to_owned(),
                 decoder: decoder_builder(LayerTypePayload),
             },
             in_data: Option::from(data),
@@ -57,6 +60,14 @@ impl Layer for Payload {
 
     fn layer_payload(&self) -> Option<Rc<[u8]>> {
         None
+    }
+
+    fn verify_checksum(&self) -> Result<ChecksumVerificationResult, PacketError> {
+        Err(PacketError::try_from(decodeerror::DecodeError::new(
+            "Payload layer does not have a checksum",
+            None,
+        ))
+        .unwrap())
     }
 
     fn string(&self) -> String {
@@ -98,7 +109,7 @@ impl SerializableLayer for Payload {
             Some(data) => {
                 let size = data.deref().len();
                 let bytes = buffer.prepend_bytes(size)?;
-                bytes.copy_from_slice(&data.deref());
+                bytes.copy_from_slice(data.deref());
                 Ok(())
             }
         }
@@ -124,7 +135,7 @@ impl Payloadable for Payload {
     fn decode_from_bytes(
         &mut self,
         data: Rc<[u8]>,
-        _decoder: Box<dyn DecodeFeedback>,
+        _decoder: Rc<dyn DecodeFeedback>,
     ) -> Result<(), DecodeError> {
         self.in_data = Option::from(data.clone());
 

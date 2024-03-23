@@ -18,5 +18,5 @@ pub trait ZeroCopyPacketDataSource {
     ///
     /// The `'a` lifetime parameter specifies that the returned data slice is valid for the lifetime `'a`.
     /// This means the data can be used as long as it does not outlive the source it comes from.
-    fn zero_copy_read_packet_data<'a>(&'a self) -> Result<(&'a [u8], CaptureInfo), Box<dyn std::error::Error>>;
+    fn zero_copy_read_packet_data(&self) -> Result<(&[u8], CaptureInfo), Box<dyn std::error::Error>>;
 }

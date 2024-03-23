@@ -1,5 +1,5 @@
 /// `DecodeOptions` configures how to decode a packet.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct DecodeOptions {
     /// Lazy decoding decodes the minimum number of layers needed to return data
     /// for a packet at each function call. Be careful using this with concurrent
@@ -36,6 +36,14 @@ pub struct DecodeOptions {
 // let no_copy_options = DecodeOptions::no_copy();
 // let datagram_options = DecodeOptions::decode_streams_as_datagrams();
 impl DecodeOptions {
+    pub const DEFAULT: DecodeOptions = DecodeOptions {
+        lazy: false,
+        no_copy: false,
+        pool: false,
+        skip_decode_recovery: false,
+        decode_streams_as_datagrams: false,
+    };
+
     /// Provides the default DecodeOptions, which is the safest but slowest configuration.
     pub fn default() -> Self {
         DecodeOptions {

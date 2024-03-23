@@ -3,7 +3,8 @@ use std::rc::Rc;
 
 //use crate::rtpacket::decode::decoder::Decoder;
 use crate::rtpacket::decode::PacketBuilder;
-use crate::rtpacket::error::decodererror::{DecodeError, ErrorDecodeable};
+use crate::rtpacket::error::decodeerror::DecodeError;
+use crate::rtpacket::error::ErrorDecodeable;
 
 /// Attempts to decode a data packet, returning an error if the layer type is not supported.
 ///

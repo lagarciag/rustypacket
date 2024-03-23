@@ -4,7 +4,7 @@ use std::rc::Rc;
 use crate::rtpacket::base::{ApplicationLayer, Layer, Payloadable};
 use crate::rtpacket::base::fragment::Fragment;
 use crate::rtpacket::decode::{DecodeFunc, PacketBuilder};
-use crate::rtpacket::error::decodererror::{DecodeError, ErrorDecodeable};
+use crate::rtpacket::error::decodeerror::DecodeError;
 
 pub fn fragment_decoder() -> DecodeFunc {
     decode_fragment
@@ -29,14 +29,6 @@ pub fn fragment_decoder() -> DecodeFunc {
 ///   and processed successfully. On failure, returns `Err(DecodeError)` with details about the
 ///   decoding failure, including an optional source error if available.
 ///
-/// # Examples
-/// ```
-/// // Assuming the existence of `data` as Rc<[u8]> and `builder` as Rc<RefCell<dyn PacketBuilder>>
-/// match decode_fragment(data, builder) {
-///     Ok(_) => println!("Fragment decoded successfully."),
-///     Err(e) => println!("Failed to decode fragment: {}", e),
-/// }
-/// ```
 pub fn decode_fragment(
     data: Rc<[u8]>,
     builder: Rc<RefCell<dyn PacketBuilder>>,

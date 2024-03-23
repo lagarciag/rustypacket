@@ -1,11 +1,11 @@
-use std::error::Error;
 use std::rc::Rc;
 
 use crate::rtpacket::base::{
     ApplicationLayer, ErrorLayer, Layer, LinkLayer, NetworkLayer, TransportLayer,
 };
 use crate::rtpacket::decode::{DecodeFeedback, DecodeFunc};
-use crate::rtpacket::packet::DecodeOptions;
+use crate::rtpacket::error::decodeerror::DecodeError;
+use crate::rtpacket::packet::decodeoptions::DecodeOptions;
 
 /// Used by layer decoders to store the layers they've decoded,
 /// and to defer future decoding via `next_decoder`.
@@ -23,12 +23,12 @@ pub trait PacketBuilder: DecodeFeedback {
     fn set_network_layer(&mut self, layer: Rc<dyn NetworkLayer>);
     fn set_transport_layer(&mut self, layer: Rc<dyn TransportLayer>);
     fn set_application_layer(&mut self, layer: Rc<dyn ApplicationLayer>);
-    fn set_error_layer(&mut self, layer: Box<dyn ErrorLayer>);
+    fn set_error_layer(&mut self, layer: Rc<dyn ErrorLayer>);
 
     /// Should be called by a decoder when it's done decoding a packet layer
     /// but further decoding is required. The provided `next` decoder is then
     /// used to decode the last added layer's payload.
-    fn next_decoder(&mut self, next: Rc<DecodeFunc>) -> Result<(), Box<dyn Error>>;
+    fn next_decoder(&mut self, next: Rc<DecodeFunc>) -> Result<(), DecodeError>;
 
     /// Utility method for debugging. Should dump packet data to stderr or
     /// another diagnostic output. Not intended for use in production decoders.
@@ -37,7 +37,7 @@ pub trait PacketBuilder: DecodeFeedback {
     /// Returns the decode options associated with this packet builder.
     fn decode_options(&self) -> DecodeOptions;
 
-    fn as_decode_feedback(&self) -> Box<dyn DecodeFeedback>;
+    fn as_decode_feedback(&self) -> Rc<dyn DecodeFeedback>;
 
     fn layers_count(&self) -> usize;
 }
@@ -64,7 +64,7 @@ impl PacketBuilder for MockPacketBuilder {
     }
 
     fn set_link_layer(&mut self, layer: Rc<dyn LinkLayer>) {
-        self.link_layer = Some(Rc::from(layer));
+        self.link_layer = Some(layer);
     }
 
     fn set_network_layer(&mut self, _layer: Rc<dyn NetworkLayer>) {
@@ -79,11 +79,11 @@ impl PacketBuilder for MockPacketBuilder {
         self.application_layer = Some(layer);
     }
 
-    fn set_error_layer(&mut self, _layer: Box<dyn ErrorLayer>) {
+    fn set_error_layer(&mut self, _layer: Rc<dyn ErrorLayer>) {
         todo!()
     }
 
-    fn next_decoder(&mut self, _next: Rc<DecodeFunc>) -> Result<(), Box<dyn Error>> {
+    fn next_decoder(&mut self, _next: Rc<DecodeFunc>) -> Result<(), DecodeError> {
         todo!()
     }
 
@@ -95,8 +95,8 @@ impl PacketBuilder for MockPacketBuilder {
         todo!()
     }
 
-    fn as_decode_feedback(&self) -> Box<dyn DecodeFeedback> {
-        Box::new(self.clone())
+    fn as_decode_feedback(&self) -> Rc<dyn DecodeFeedback> {
+        Rc::new(self.clone())
     }
 
     fn layers_count(&self) -> usize {

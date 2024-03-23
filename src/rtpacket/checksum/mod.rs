@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::rtpacket::base::Layer;
 
 /// Represents the outcome of checksum verification, including both successful
@@ -13,12 +15,13 @@ pub struct ChecksumVerificationResult {
 }
 
 /// Provides detailed information about a failed checksum verification for a layer.
+#[derive(Clone)]
 pub struct ChecksumMismatch {
     /// The checksum verification result that failed.
     pub result: ChecksumVerificationResult,
     /// The layer whose checksum verification failed.
     // Assuming `Layer` is a trait defined elsewhere.
-    pub layer: Box<dyn Layer>,
+    pub layer: Rc<dyn Layer>,
     /// The index of the layer within the packet.
     pub layer_index: usize,
 }
@@ -99,4 +102,3 @@ mod tests {
         }
     }
 }
-

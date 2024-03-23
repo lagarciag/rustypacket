@@ -2,34 +2,7 @@ use std::backtrace::Backtrace;
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
-pub trait Backtraceable {
-    fn backtrace(&self) -> &Backtrace;
-}
-
-/// `ErrorDecodeable` is a trait extending `std::error::Error` and `std::fmt::Display`
-/// to include functionality specific to decoding errors.
-///
-/// This trait is designed to be implemented by error types that require a message and
-/// potentially a backtrace to aid in debugging decoding operations.
-pub trait ErrorDecodeable: Error + Display {
-    /// Creates a new instance of an error type implementing `ErrorDecodeable`.
-    ///
-    /// # Arguments
-    ///
-    /// * `message` - A descriptive message about the error that occurred.
-    ///
-    /// # Returns
-    ///
-    /// A new instance of the error type.
-    fn new(message: &str, source: Option<Box<dyn Error>>) -> Self;
-
-    /// Retrieves the error message associated with this error.
-    ///
-    /// # Returns
-    ///
-    /// A reference to the error message string.
-    fn message(&self) -> &str;
-}
+use crate::rtpacket::error::{Backtraceable, ErrorDecodeable};
 
 /// `DecodeError` is a custom error type designed for use in decoding operations.
 /// It contains an error message and a stack trace to aid in diagnosing issues.
@@ -37,7 +10,7 @@ pub trait ErrorDecodeable: Error + Display {
 pub struct DecodeError {
     pub message: String,
     pub stack_trace: Backtrace,
-    source: Option<Box<dyn Error>>,
+    pub source: Option<Box<dyn Error>>,
 }
 
 impl Display for DecodeError {
@@ -54,7 +27,7 @@ impl Error for DecodeError {
 }
 
 impl ErrorDecodeable for DecodeError {
-    /// Constructs a new `DecodeError` with the specified message and captures the current stack trace.
+    /// Constructs a new `MethodNotImplementedError` with the specified message and captures the current stack trace.
     fn new(message: &str, source: Option<Box<dyn Error>>) -> Self {
         DecodeError {
             message: message.to_string(),
@@ -77,9 +50,9 @@ impl Backtraceable for DecodeError {
 
 // These type aliases define specific instances of `DecodeError` for use in different
 // decoding error scenarios, enhancing code readability and error handling consistency.
-pub type ErrorNoLayersAdded = DecodeError;
-pub type ErrorNoLastLayer = DecodeError;
-pub type ErrorSerializeTo = DecodeError;
+pub type NoLastLayerError = DecodeError;
+
+
 
 #[cfg(test)]
 mod tests {

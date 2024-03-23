@@ -6,7 +6,7 @@ use crate::rtpacket::decode::decodefragment::decode_fragment;
 use crate::rtpacket::decode::decodepayload::create_decode_payload;
 use crate::rtpacket::decode::decodeunknown::create_decode_unknown;
 pub use crate::rtpacket::decode::packetbuilder::PacketBuilder;
-use crate::rtpacket::error::decodererror::DecodeError;
+use crate::rtpacket::error::decodeerror::DecodeError;
 pub use crate::rtpacket::layertype::LayerType;
 use crate::rtpacket::layertype::LayerTypes;
 

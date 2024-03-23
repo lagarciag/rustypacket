@@ -1,16 +1,19 @@
 use std::error::Error;
+use std::rc::Rc;
 use std::sync::mpsc::Receiver;
 use std::sync::Mutex;
 
+use hex::encode as hex_encode;
 use lazy_static::lazy_static;
 
 use crate::rtpacket::base::Layer;
 use crate::rtpacket::decode::DecodeFunc;
 
 use super::capture::CaptureInfo;
+use super::packet::decodeoptions::DecodeOptions;
 use super::packet::packetable::{Packet, Packetable};
 
-mod decodeoptions;
+pub mod decodeoptions;
 mod eagerpacket;
 mod packetable;
 mod packetbase;
@@ -102,106 +105,6 @@ struct PacketSource {
     c: Receiver<Packet>,
 }
 
-// `DecodeOptions` instructs how to decode a packet.
-//
-// These options control various aspects of the packet decoding process,
-// affecting performance and behavior.
-#[derive(PartialEq, Debug)]
-pub struct DecodeOptions {
-    /// Lazy decoding decodes the minimum number of layers needed to return data
-    /// for a packet at each function call. Be careful using this with concurrent
-    /// packet processors, as each call to packet.* could mutate the packet, and
-    /// two concurrent function calls could interact poorly.
-    pub lazy: bool,
-
-    /// NoCopy decoding doesn't copy its input buffer into storage that's owned by
-    /// the packet. If you can guarantee that the bytes underlying the slice
-    /// passed into NewPacket aren't going to be modified, this can be faster. If
-    /// there's any chance that those bytes WILL be changed, this will invalidate
-    /// your packets.
-    pub no_copy: bool,
-
-    /// Pool decoding only applies if NoCopy is false.
-    /// Instead of always allocating new memory it takes the memory from a pool.
-    /// NewPacket then will return a PooledPacket instead of a Packet.
-    /// As soon as you're done with the PooledPacket you should call PooledPacket.Dispose() to return it to the pool.
-    pub pool: bool,
-
-    /// SkipDecodeRecovery skips over panic recovery during packet decoding.
-    /// Normally, when packets decode, if a panic occurs, that panic is captured
-    /// by a recover(), and a DecodeFailure layer is added to the packet detailing
-    /// the issue. If this flag is set, panics are instead allowed to continue up
-    /// the stack.
-    pub skip_decode_recovery: bool,
-
-    /// DecodeStreamsAsDatagrams enables routing of application-level layers in the TCP
-    /// decoder. If true, we should try to decode layers after TCP in single packets.
-    /// This is disabled by default because the reassembly package drives the decoding
-    /// of TCP payload data after reassembly.
-    pub decode_streams_as_datagrams: bool,
-}
-
-/*
-This Rust code translates the Go variables Default, Lazy,
-NoCopy, and DecodeStreamsAsDatagrams into associated constants
-within the DecodeOptions struct.
-Each constant is defined with specific fields set to enable the
-described behavior, utilizing Rust's struct update syntax
-(..Self::DEFAULT) for inheriting other default fields.
-*/
-impl DecodeOptions {
-    /// The default decoding behavior provides the safest, but slowest, method for decoding
-    /// packets. It eagerly processes all layers, ensuring concurrency safety, and copies
-    /// its input buffer, ensuring the packet remains valid if the underlying slice is
-    /// modified. However, these features come at the cost of performance.
-    ///
-    /// Use this for the most conservative decoding approach, especially when packet slices
-    /// might be modified after packet creation or when accessing packets from multiple threads.
-    pub fn default() -> DecodeOptions {
-        DecodeOptions {
-            lazy: false,
-            no_copy: false,
-            pool: false,
-            skip_decode_recovery: false,
-            decode_streams_as_datagrams: false,
-        }
-    }
-    pub const DEFAULT: DecodeOptions = DecodeOptions {
-        lazy: false,
-        no_copy: false,
-        pool: false,
-        skip_decode_recovery: false,
-        decode_streams_as_datagrams: false,
-    };
-
-    /// Lazy decoding minimizes the number of layers processed to return data
-    /// for a packet at each function call. This is more efficient but requires
-    /// care when using in concurrent scenarios to avoid state mutations between
-    /// function calls.
-    pub const LAZY: DecodeOptions = DecodeOptions {
-        lazy: true,
-        ..Self::DEFAULT
-    };
-
-    /// NoCopy decoding avoids copying the input buffer into the packet's owned storage,
-    /// improving performance when you can guarantee the underlying byte slice
-    /// won't be modified after packet creation. Use this when the input data is
-    /// static or controlled.
-    pub const NO_COPY: DecodeOptions = DecodeOptions {
-        no_copy: true,
-        ..Self::DEFAULT
-    };
-
-    /// DecodeStreamsAsDatagrams enables the decoding of application-level layers
-    /// directly after TCP layers in single packets. This is particularly useful
-    /// for protocols like HTTP/2 and is disabled by default because typically
-    /// the reassembly package handles TCP payload decoding.
-    pub const DECODE_STREAMS_AS_DATAGRAMS: DecodeOptions = DecodeOptions {
-        decode_streams_as_datagrams: true,
-        ..Self::DEFAULT
-    };
-}
-
 fn layer_string(layer: Box<dyn Layer>) -> String {
     // Directly using the `string` method if available
     layer.string()
@@ -223,36 +126,15 @@ pub trait Dumper {
 /// Its output is a concatenation of the layer's string representation, a newline,
 /// optionally the layer's dump (if it implements Dumper), and a hex dump of the layer's contents.
 /// It contains newlines and ends with a newline.
-fn layer_dump(l: Box<dyn Layer>) -> String {
-    // let mut result = String::new();
-    //
-    // // Layer's string representation
-    // result += &l.string();
-    // result.push('\n');
-    //
-    // // Check if the layer implements Dumper and append its dump
-    // if let Some(dumper) = l.as_any().downcast_ref::<dyn Dumper>() {
-    //     let dump = dumper.dump();
-    //     if !dump.is_empty() {
-    //         result += &dump;
-    //         if !dump.ends_with('\n') {
-    //             result.push('\n');
-    //         }
-    //     }
-    // }
-    //
-    // // Append hex dump of the layer's contents
-    // let hex_dump = hex_encode(l.layer_contents());
-    // result += &format!("{}\n", hex_dump);
-    //
-    // result
-    todo!()
+fn layer_dump(l: Rc<dyn Layer>) -> String {
+    let contents = l.layer_contents().unwrap();
+    hex_encode(contents.as_ref())
 }
 
 fn new_packet(
-    data: &[u8],
-    first_layer_decoder: DecodeFunc,
-    options: DecodeOptions,
+    _data: &[u8],
+    _first_layer_decoder: DecodeFunc,
+    _options: DecodeOptions,
 ) -> Box<dyn Packetable> {
     todo!()
 }

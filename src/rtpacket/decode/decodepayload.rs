@@ -4,7 +4,7 @@ use std::rc::Rc;
 use crate::rtpacket::base::{ApplicationLayer, Layer, Payloadable};
 use crate::rtpacket::base::payload::Payload;
 use crate::rtpacket::decode::PacketBuilder;
-use crate::rtpacket::error::decodererror::DecodeError;
+use crate::rtpacket::error::decodeerror::DecodeError;
 
 /// Decodes the payload from the provided data and updates the packet builder with the decoded information.
 ///
@@ -52,7 +52,9 @@ pub fn create_decode_payload(
 
     // Add the payload as a new layer and as the application layer in the packet builder.
     builder.borrow_mut().add_layer(payload_as_layer);
-    builder.borrow_mut().set_application_layer(payload_as_application_layer);
+    builder
+        .borrow_mut()
+        .set_application_layer(payload_as_application_layer);
 
     // Return success.
     Ok(())

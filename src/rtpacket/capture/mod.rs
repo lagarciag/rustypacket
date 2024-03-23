@@ -1,4 +1,5 @@
 use std::any::Any;
+use std::rc::Rc;
 use std::time::SystemTime;
 
 pub trait AnyClone: Any {
@@ -55,9 +56,21 @@ macro_rules! define_capture_info_struct {
 
 // CaptureInfo provides standardized information about a packet captured off
 // the wire or read from a file.
-define_capture_info_struct! {
-    CaptureInfo {
-    }
+pub struct CaptureInfo {
+    /// Timestamp is the time the packet was captured, if that is known.
+    pub timestamp: SystemTime,
+    /// CaptureLength is the total number of bytes read off of the wire.
+    pub capture_length: usize,
+    /// Length is the size of the original packet. Should always be >=
+    /// CaptureLength.
+    pub length: usize,
+    /// InterfaceIndex identifies the network interface from which the packet
+    /// was captured, if applicable.
+    pub interface_index: usize,
+    /// The packet source can place ancillary data of various types here.
+    /// For example, a packet capture source might report the VLAN of captured
+    /// packets this way.
+    pub ancillary_data: Vec<Box<dyn AnyClone>>,
 }
 
 impl CaptureInfo {
@@ -69,11 +82,29 @@ impl CaptureInfo {
 
 // Contains metadata for a packet, including capture information and
 // a flag indicating if the packet data is truncated.
-define_capture_info_struct! {
-    PacketMetadata {
-        // Indicates whether the packet's data is truncated compared to what
-        // the packet's headers indicate. This can happen due to errors in
-        // packet formation or due to partial capture of the packet data.
-        truncated: bool,,
-    }
+#[derive(Clone)]
+pub struct PacketMetadata {
+    /// Timestamp is the time the packet was captured, if that is known.
+    pub timestamp: SystemTime,
+
+    /// CaptureLength is the total number of bytes read off of the wire.
+    pub capture_length: usize,
+
+    /// Length is the size of the original packet. Should always be >=
+    /// CaptureLength.
+    pub length: usize,
+
+    /// InterfaceIndex identifies the network interface from which the packet
+    /// was captured, if applicable.
+    pub interface_index: usize,
+
+    /// The packet source can place ancillary data of various types here.
+    /// For example, a packet capture source might report the VLAN of captured
+    /// packets this way.
+    pub ancillary_data: Vec<Rc<dyn AnyClone>>,
+
+    /// Indicates whether the packet's data is truncated compared to what
+    /// the packet's headers indicate. This can happen due to errors in
+    /// packet formation or due to partial capture of the packet data.
+    pub truncated: bool,
 }

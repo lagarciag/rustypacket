@@ -1,10 +1,10 @@
-mod capture;
-mod checksum;
-mod base;
-mod error;
-mod layertype;
+pub(crate) mod base;
+pub mod capture;
+pub mod checksum;
+pub mod error;
+pub mod layertype;
 
-mod decode;
-mod packet;
-mod writer;
-mod layerclass;
+pub(crate) mod decode;
+pub mod layerclass;
+pub mod packet;
+pub mod writer;

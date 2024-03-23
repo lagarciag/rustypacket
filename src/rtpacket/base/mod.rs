@@ -1,17 +1,20 @@
+use std::any::Any;
 use std::error::Error;
 use std::rc::Rc;
 
 // Assumed external crate for lazy_static
 use crate::rtpacket::checksum::ChecksumVerificationResult;
 use crate::rtpacket::decode::{DecodeFeedback, LayerType};
-use crate::rtpacket::error::decodererror::DecodeError;
+use crate::rtpacket::error::{ErrorDecodeable, PacketError};
+use crate::rtpacket::error::decodeerror::DecodeError;
+use crate::rtpacket::error::nomethoderror::MethodNotImplementedError;
 use crate::rtpacket::layerclass::LayerClass;
 
 pub(crate) mod fragment;
 pub(crate) mod payload;
 
 // Common trait for all layers, providing basic methods.
-pub trait Layer {
+pub trait Layer: Any {
     // Returns the LayerType of this layer.
     fn layer_type(&self) -> LayerType;
 
@@ -20,6 +23,32 @@ pub trait Layer {
 
     // Returns the payload within this layer.
     fn layer_payload(&self) -> Option<Rc<[u8]>>;
+
+    fn verify_checksum(&self) -> Result<ChecksumVerificationResult, PacketError> {
+        Err(PacketError::from(MethodNotImplementedError::new(
+            "Method not implemented",
+            None,
+        )))
+    }
+
+    fn decode_from_bytes(
+        &mut self,
+        data: Rc<[u8]>,
+        feedback: Rc<dyn DecodeFeedback>,
+    ) -> Result<(), PacketError> {
+        Err(PacketError::from(MethodNotImplementedError::new(
+            "Method decode_from_bytes() not implemented for this layer",
+            None,
+        )))
+    }
+    fn next_layer_type(&self) -> Result<LayerType,PacketError> {
+        Err(PacketError::from(MethodNotImplementedError::new(
+            "Method next_layer_type() not implemented for this layer",
+            None,
+        )))
+
+    }
+
     fn string(&self) -> String;
 }
 
@@ -28,7 +57,7 @@ pub trait Layer {
 pub trait LayerWithChecksum {
     /// Verifies the checksum and returns the result as a `Result` type,
     /// encapsulating `ChecksumVerificationResult` on success, or an error message on failure.
-    fn verify_checksum(&self) -> Result<ChecksumVerificationResult, Box<dyn Error>>;
+    fn verify_checksum(&self) -> Result<ChecksumVerificationResult, PacketError>;
 }
 
 // Trait for layers that contain a payload.
@@ -40,7 +69,7 @@ pub trait Payloadable: Layer {
     fn decode_from_bytes(
         &mut self,
         data: Rc<[u8]>,
-        _df: Box<dyn DecodeFeedback>,
+        _df: Rc<dyn DecodeFeedback>,
     ) -> Result<(), DecodeError>;
 }
 
@@ -76,5 +105,5 @@ pub trait ApplicationLayer: Layer {
 /// Its payload is all the bytes that we were unable to decode, and the returned
 /// error details why the decoding failed.
 pub trait ErrorLayer: Layer {
-    fn error(&self) -> &(dyn Error + 'static);
+    fn error(&self) -> DecodeError;
 }

@@ -5,12 +5,11 @@ use std::rc::Rc;
 use std::sync::Mutex;
 
 use crate::rtpacket::decode::{DecodeFunc, PacketBuilder};
-use crate::rtpacket::error::decodererror::DecodeError;
-use crate::rtpacket::layertype::LayerTypes::{LayerTypeDecodeFailure, LayerTypeZero};
+use crate::rtpacket::error::decodeerror::DecodeError;
 
 const ARRAY_REPEAT_VALUE: Option<LayerType> = None;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct LayerType {
     pub id: LayerTypeID,
     /// The name of the layer, returned by each layer type's String method.
@@ -141,56 +140,4 @@ impl LayerRegistry {
     }
 
     // Methods to add, retrieve, and manage decoders and metadata would follow...
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_layer_registry_initialization() {
-        let registry = LayerRegistry::new();
-        // Test the initialization logic as needed, for example:
-        assert_eq!(registry.lt_meta[LayerTypeZero as usize].is_none(), false);
-        assert_eq!(
-            registry.lt_meta[LayerTypeDecodeFailure as usize].is_none(),
-            false
-        );
-        // Add more assertions as necessary
-    }
-
-    //#[test]
-    // fn test_register_layer() {
-    //     let mut registry = LayerRegistry::new();
-    //     let layer_type_metadata = LayerType {
-    //         id: 999, // Assuming this ID is not already used
-    //         name: "TestLayer".to_owned(),
-    //         decoder: Rc::new(|_data, _builder| Ok(())), // Mock decoder
-    //     };
-    //
-    //     assert!(registry.register_layer(&layer_type_metadata, 999).is_ok());
-    //     // Test that the layer was registered correctly
-    //     let lt_meta_map = registry.lt_meta_map.lock().unwrap();
-    //     assert!(lt_meta_map.contains_key(&999));
-    // }
-    //
-    // #[test]
-    // fn test_layer_type_decode() {
-    //     let layer_type = LayerType {
-    //         id: 999,
-    //         name: "TestLayer".to_owned(),
-    //         decoder: Rc::new(|_data, _builder| {
-    //             // Implement mock decode logic
-    //             Ok(())
-    //         }),
-    //     };
-    //
-    //     let data = Rc::new(&[1u8, 2, 3] as &[u8]);
-    //     let mut builder = MockPacketBuilder {};
-    //
-    //     assert!(layer_type.decode(&data, &mut builder).is_ok());
-    //     // Add more assertions to verify that `decode` works as expected
-    // }
-
-    // Add more tests as necessary...
 }

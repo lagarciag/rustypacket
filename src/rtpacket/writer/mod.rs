@@ -308,7 +308,7 @@ pub fn serialize_layers(
 ) -> Result<(), Box<dyn Error>> {
     buffer.clear();
     for layer in layers.iter().rev() {
-        layer.serialize_to(buffer, options.clone())?;
+        layer.serialize_to(buffer, options)?;
         buffer.push_layer(layer.layer_type());
     }
     Ok(())

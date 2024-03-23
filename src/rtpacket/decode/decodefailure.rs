@@ -1,8 +1,12 @@
-use std::error::Error;
 use std::rc::Rc;
 
 use crate::rtpacket::base::{ErrorLayer, Layer};
+use crate::rtpacket::checksum::ChecksumVerificationResult;
 use crate::rtpacket::decode::decoder_builder;
+use crate::rtpacket::error::decodeerror::DecodeError;
+use crate::rtpacket::error::ErrorDecodeable;
+use crate::rtpacket::error::nomethoderror::MethodNotImplementedError;
+use crate::rtpacket::error::PacketError;
 use crate::rtpacket::layertype::{LayerType, LayerTypeID};
 use crate::rtpacket::layertype::LayerTypes::LayerTypeDecodeFailure;
 
@@ -11,11 +15,12 @@ use crate::rtpacket::layertype::LayerTypes::LayerTypeDecodeFailure;
 /// This struct implements `ErrorLayer`. `LayerContents` will be the entire set
 /// of bytes that failed to parse, and `Error` will return the reason parsing
 /// failed.
+#[derive(Clone)]
 pub struct DecodeFailure {
-    layer_type: LayerType,
-    pub(crate) in_data: Vec<u8>,
-    pub(crate) err: Box<dyn Error>,
-    pub(crate) stack: Vec<u8>,
+    pub layer_type: Option<LayerType>,
+    pub in_data: Option<Rc<[u8]>>,
+    pub err: Rc<DecodeError>,
+    pub stack: Vec<u8>,
 }
 
 impl DecodeFailure {
@@ -30,15 +35,15 @@ impl DecodeFailure {
     /// # Returns
     ///
     /// Returns a new instance of `DecodeFailure`.
-    pub fn new(data: Vec<u8>, err: Box<dyn Error>, stack: Vec<u8>) -> Self {
+    pub fn new(data: Rc<[u8]>, err: DecodeError, stack: Vec<u8>) -> Self {
         DecodeFailure {
-            layer_type: LayerType {
+            layer_type: Some(LayerType {
                 id: LayerTypeDecodeFailure as LayerTypeID,
                 name: "DecodeFailure".to_owned(),
                 decoder: decoder_builder(LayerTypeDecodeFailure),
-            },
-            in_data: data,
-            err,
+            }),
+            in_data: Some(data),
+            err: Rc::new(err),
             stack,
         }
     }
@@ -62,12 +67,12 @@ impl DecodeFailure {
 }
 
 impl ErrorLayer for DecodeFailure {
-    fn error(&self) -> &(dyn Error + 'static) {
-        &*self.err
+    fn error(&self) -> DecodeError {
+        todo!()
     }
 }
 
-impl<'a> Layer for DecodeFailure {
+impl Layer for DecodeFailure {
     /// Returns the type of the layer.
     ///
     /// This method identifies the `DecodeFailure` layer type, helping users
@@ -77,7 +82,7 @@ impl<'a> Layer for DecodeFailure {
     ///
     /// Returns a constant representing the decode failure layer type.
     fn layer_type(&self) -> LayerType {
-        self.layer_type.clone()
+        self.layer_type.clone().unwrap()
     }
 
     /// Provides access to the contents of the layer.
@@ -91,7 +96,7 @@ impl<'a> Layer for DecodeFailure {
     /// Returns an `Option` containing a reference to the layer's data as a slice of bytes.
     /// Since `DecodeFailure` always contains data, this method returns `Some`.
     fn layer_contents(&self) -> Option<Rc<[u8]>> {
-        Some(Rc::from(self.in_data.as_slice()))
+        self.in_data.clone()
     }
 
     /// Indicates that this layer type does not have a payload.
@@ -104,6 +109,13 @@ impl<'a> Layer for DecodeFailure {
     /// Returns `None`, indicating no separate payload data for this layer type.
     fn layer_payload(&self) -> Option<Rc<[u8]>> {
         None
+    }
+
+    fn verify_checksum(&self) -> Result<ChecksumVerificationResult, PacketError> {
+        Err(PacketError::from(MethodNotImplementedError::new(
+            "layer does not verify checksum",
+            None,
+        )))
     }
 
     /// Provides a descriptive string for the layer.
@@ -124,10 +136,11 @@ impl<'a> Layer for DecodeFailure {
 
 #[cfg(test)]
 mod tests {
-    use std::error::Error;
+    use std::rc::Rc;
 
     use crate::rtpacket::decode::decodefailure::DecodeFailure;
-    use crate::rtpacket::error::decodererror::{DecodeError, ErrorDecodeable};
+    use crate::rtpacket::error::decodeerror::DecodeError;
+    use crate::rtpacket::error::ErrorDecodeable;
 
     /// Tests that a `DecodeFailure` instance correctly retains and exposes an error message.
     ///
@@ -136,16 +149,13 @@ mod tests {
     /// the original error message is preserved and accessible.
     #[test]
     fn test_decode_failure_string() {
-        let data = vec![1, 2, 3];
-        let err: Box<dyn Error> = Box::new(DecodeError::new("Error message", None));
+        let data = Rc::from([1, 2, 3]);
+        let err = DecodeError::new("Test error", None);
         let stack = vec![4, 5, 6];
         let decode_failure = DecodeFailure::new(data, err, stack);
 
-        if let Ok(decode_error) = decode_failure.err.downcast::<DecodeError>() {
-            assert_eq!(decode_error.message(), "Error message");
-        } else {
-            panic!("Failed to downcast to DecodeError");
-        }
+        let decode_error = decode_failure.err;
+        assert_eq!(decode_error.message(), "Error message");
     }
 
     /// Tests that `DecodeFailure::dump` correctly handles valid UTF-8 byte sequences.
@@ -154,8 +164,8 @@ mod tests {
     /// the returned string matches the expected UTF-8 content exactly.
     #[test]
     fn test_dump_valid_utf8() {
-        let data = vec![1, 2, 3];
-        let err: Box<dyn Error> = Box::new(DecodeError::new("Test error", None));
+        let data = Rc::from([1, 2, 3]);
+        let err = DecodeError::new("Test error", None);
         let stack = "Valid UTF-8 string".as_bytes().to_vec();
         let decode_failure = DecodeFailure::new(data, err, stack);
 
@@ -170,8 +180,8 @@ mod tests {
     /// ensuring that the method always returns a valid UTF-8 `String`.
     #[test]
     fn test_dump_invalid_utf8() {
-        let data = vec![1, 2, 3];
-        let err: Box<dyn Error> = Box::new(DecodeError::new("Test error", None));
+        let data = Rc::from([1, 2, 3]);
+        let err = DecodeError::new("Test error", None);
         let stack = vec![0xff, 0xfe, 0xfd];
         let decode_failure = DecodeFailure::new(data, err, stack);
 
